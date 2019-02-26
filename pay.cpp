@@ -8,7 +8,7 @@
 using namespace std;
 
 void readData(string file, Person array[], int aSize);
-void display(Person array[], int aSize);
+void writeData(Person array[], int aSize);
 
 int main()
 {
@@ -17,7 +17,7 @@ int main()
   string file = "input.txt";
 
   readData(file, arr, size);
-  display(arr, size);
+  writeData(arr, size);
 
   return 0;
 }
@@ -38,9 +38,8 @@ void readData(string file, Person array[], int aSize)
 
   for(int i = 0; i < aSize; i++)
   {
-    if(!readFile.eof())
+    if(readFile >> fName)
     {
-      readFile >> fName;
       readFile >> lName;
       readFile >> hours;
       readFile >> rate;
@@ -49,16 +48,37 @@ void readData(string file, Person array[], int aSize)
       array[i].setHoursWorked(hours);
       array[i].setPayRate(rate);
     }
-
   }
 
+  readFile.close();
 }
 
-void display(Person array[], int aSize)
+void writeData(Person array[], int aSize)
 {
+  ofstream writeFile;
+  string name;
+  float wage;
+  Person obj;
+  int counter = 0;
+
+  writeFile.open("output.txt");
+
+  // Counts how many indexes are filled with non default entries
   for(int i = 0; i < aSize; i++)
   {
-    cout << array[i].getFirstName() << " " << array[i].getLastName() << " ";
-    cout << array[i].getHoursWorked() << " " << array[i].getPayRate() << endl;
+    if(array[i].getFirstName() != "NA")
+    {
+      counter++;
+    }
   }
+
+  // Writes data stored in the array to a seperate text file
+  for(int j = 0; j < counter; j++)
+  {
+    name = array[j].fullName();
+    wage = array[j].totalPay();
+    writeFile << name << " " << fixed << setprecision(2) << wage << endl;
+  }
+
+  writeFile.close();
 }
