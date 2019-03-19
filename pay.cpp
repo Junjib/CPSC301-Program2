@@ -1,30 +1,32 @@
+// Junji Bressan
+// 301 Section 1
+
 #include <iostream>
 #include <string>
 #include <iomanip>
 #include <fstream>
+#include <vector>
 #include "person.cpp"
 
 using namespace std;
 
-void readData(string file, Person array[], int aSize);
-void writeData(Person array[], int aSize);
+void readData(string file, vector<Person> &employees);
+void writeData(vector<Person> &employees);
 
 int main()
 {
-  int size = 20;
-  Person arr[size];
+  vector<Person> employees;
   string file = "input.txt";
 
-  readData(file, arr, size);
-  writeData(arr, size);
+  readData(file, employees);
+  writeData(employees);
 
   return 0;
 }
 
-void readData(string file, Person array[], int aSize)
+void readData(string file, vector<Person> &employees)
 {
   ifstream readFile;
-  Person obj;
   string fName, lName;
   float rate, hours;
 
@@ -35,49 +37,30 @@ void readData(string file, Person array[], int aSize)
     cout << "Error\n";
   }
 
-  for(int i = 0; i < aSize; i++)
+  while(readFile >> fName)
   {
-    if(readFile >> fName)
-    {
-      readFile >> lName;
-      readFile >> hours;
-      readFile >> rate;
-      array[i].setFirstName(fName);
-      array[i].setLastName(lName);
-      array[i].setHoursWorked(hours);
-      array[i].setPayRate(rate);
-    }
+    readFile >> lName;
+    readFile >> hours;
+    readFile >> rate;
+    employees.emplace_back(fName, lName, rate, hours);
   }
-
   readFile.close();
 }
 
-void writeData(Person array[], int aSize)
+void writeData(vector<Person> &employees)
 {
   ofstream writeFile;
   string name;
   float wage;
-  Person obj;
   int counter = 0;
 
   writeFile.open("output.txt");
 
-  // Counts how many indexes are filled with non default entries
-  for(int i = 0; i < aSize; i++)
+  for(int i = 0; i < employees.size(); i++)
   {
-    if(array[i].getFirstName() != "NA")
-    {
-      counter++;
-    }
-  }
-
-  // Writes data stored in the array to a seperate text file
-  for(int j = 0; j < counter; j++)
-  {
-    name = array[j].fullName();
-    wage = array[j].totalPay();
+    name = employees[i].fullName();
+    wage = employees[i].totalPay();
     writeFile << name << " " << fixed << setprecision(2) << wage << endl;
   }
-
   writeFile.close();
 }
