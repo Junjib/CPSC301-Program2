@@ -6,12 +6,12 @@
 
 using namespace std;
 
-Person::Person()
+Person::Person(string firstName, string lastName, float payRate, float hoursWorked)
 {
-  firstName = "NA";
-  lastName = "NA";
-  payRate = 0.00;
-  hoursWorked = 0.0;
+  setFirstName(firstName);
+  setLastName(lastName);
+  setPayRate(payRate);
+  setHoursWorked(hoursWorked);
 }
 
 void Person::setLastName(string lName)
